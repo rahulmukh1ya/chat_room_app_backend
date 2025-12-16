@@ -8,11 +8,13 @@ import (
 
 type CreateRoomRequest struct {
 	RoomName string `json:"roomName"`
+	Username string `json:"username"`
 }
 
 type CreateRoomResponse struct {
-	RoomID string `json:"roomId"`
-	PIN    string `json:"pin"`
+	RoomID string        `json:"roomId"`
+	PIN    string        `json:"pin"`
+	Users  []models.User `json:"users"`
 }
 
 func CreateRoom(w http.ResponseWriter, r *http.Request) {
@@ -23,11 +25,12 @@ func CreateRoom(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	room := models.CreateRoom(req.RoomName)
+	room := models.CreateRoom(req.RoomName, req.Username)
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(CreateRoomResponse{
 		RoomID: room.ID,
-		PIN: room.PIN,
+		PIN:    room.PIN,
+		Users:  room.Users,
 	})
 }

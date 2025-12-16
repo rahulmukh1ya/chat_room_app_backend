@@ -1,6 +1,7 @@
 package services
 
 import (
+	"chat-room-app/models"
 	"log"
 	"os"
 
@@ -41,5 +42,46 @@ func BroadcastMessage(roomID string, data map[string]interface{}) error {
 	}
 
 	log.Printf("Message sent to channel: %s", channelName)
+	return nil
+}
+
+func BroadcastUserJoined(roomID string, data map[string]interface{}) error {
+	channelName := "chat-" + roomID
+	eventName := "user-joined"
+
+	err := PusherClient.Trigger(channelName, eventName, data)
+	if err != nil {
+		log.Printf("Pusher trigger error: %v", err)
+		return err
+	}
+
+	user, ok := data["user"].(models.User)
+	if !ok {
+		log.Printf("Invalid user type in broadcast user joined data")
+		return nil
+	}
+
+	log.Printf("%s joined to channel: %s", user.Username, channelName)
+
+	return nil
+}
+
+func BroadcastUserLeft(roomID string, data map[string]interface{}) error {
+	channelName := "chat-" + roomID
+	eventName := "user-left"
+
+	err := PusherClient.Trigger(channelName, eventName, data)
+	if err != nil {
+		log.Printf("Pusher trigger error: %v", err)
+		return err
+	}
+
+	user, ok := data["user"].(models.User)
+	if !ok {
+		log.Printf("Invalid user type in broadcast user joined data")
+		return nil
+	}
+
+	log.Printf("%s left channel: %s", user.Username, channelName)
 	return nil
 }

@@ -26,6 +26,7 @@ func main() {
 	router.HandleFunc("/create-room", handlers.CreateRoom).Methods("POST", "OPTIONS")
 	router.HandleFunc("/send-message", handlers.SendMessage).Methods("POST", "OPTIONS")
 	router.HandleFunc("/join-room", handlers.JoinRoom).Methods("POST", "OPTIONS")
+	router.HandleFunc("/leave-room", handlers.LeaveRoom).Methods("POST", "OPTIONS")
 
 	log.Println("Server Starting on :8080")
 	log.Fatal(http.ListenAndServe(":8080", router))

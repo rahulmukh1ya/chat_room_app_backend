@@ -10,6 +10,7 @@ import (
 type SendMessageRequest struct {
 	RoomID           string `json:"roomId"`
 	EncryptedMessage string `json:"encryptedMessage"`
+	UserID           string `json:"userId"`
 	Username         string `json:"username"`
 	Timestamp        string `json:"timestamp"`
 }
@@ -30,6 +31,7 @@ func SendMessage(w http.ResponseWriter, r *http.Request) {
 
 	data := map[string]interface{}{
 		"encryptedMessage": req.EncryptedMessage,
+		"userId":           req.UserID,
 		"username":         req.Username,
 		"timestamp":        req.Timestamp,
 	}
