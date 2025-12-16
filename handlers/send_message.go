@@ -30,10 +30,13 @@ func SendMessage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := map[string]interface{}{
-		"encryptedMessage": req.EncryptedMessage,
-		"userId":           req.UserID,
-		"username":         req.Username,
-		"timestamp":        req.Timestamp,
+		"type": "new-message",
+		"data": map[string]interface{}{
+			"encryptedMessage": req.EncryptedMessage,
+			"userId":           req.UserID,
+			"username":         req.Username,
+			"timestamp":        req.Timestamp,
+		},
 	}
 
 	if err := services.BroadcastMessage(req.RoomID, data); err != nil {

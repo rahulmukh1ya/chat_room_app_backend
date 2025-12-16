@@ -78,7 +78,7 @@ func BroadcastUserLeft(roomID string, data map[string]interface{}) error {
 
 	user, ok := data["user"].(models.User)
 	if !ok {
-		log.Printf("Invalid user type in broadcast user joined data")
+		log.Printf("Invalid user type in broadcast user left data")
 		return nil
 	}
 
