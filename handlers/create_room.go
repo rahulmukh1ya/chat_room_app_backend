@@ -12,6 +12,7 @@ type CreateRoomRequest struct {
 }
 
 type CreateRoomResponse struct {
+	RoomName string        `json:"roomName"`
 	RoomID string        `json:"roomId"`
 	PIN    string        `json:"pin"`
 	Users  []models.User `json:"users"`
@@ -29,6 +30,7 @@ func CreateRoom(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(CreateRoomResponse{
+		RoomName: room.Name,
 		RoomID: room.ID,
 		PIN:    room.PIN,
 		Users:  room.Users,

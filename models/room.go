@@ -78,7 +78,6 @@ func GetUsers(roomID string) ([]User, bool) {
 	return room.Users, true
 }
 
-
 func GetUser(roomID string, userID string) (User, bool) {
 	room, exists := rooms[roomID]
 	if !exists {
@@ -99,7 +98,7 @@ func GetRoom(id string) (*Room, bool) {
 
 func GenerateUserID() string {
 	return uuid.New().String()
-} 
+}
 
 func generateID() string {
 	const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"

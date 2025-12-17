@@ -15,8 +15,9 @@ type JoinRoomRequest struct {
 }
 
 type JoinRoomResponse struct {
-	Valid bool          `json:"valid"`
-	Users []models.User `json:"users"`
+	Valid bool         `json:"valid"`
+	Room  *models.Room `json:"room"`
+	User  *models.User `json:"user"`
 }
 
 func JoinRoom(w http.ResponseWriter, r *http.Request) {
@@ -33,16 +34,15 @@ func JoinRoom(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// if room.PIN != req.PIN {
-	// 	http.Error(w, "Invalid PIN", http.StatusUnauthorized)
-	// 	return
-	// }
-
 	thisUserId := uuid.New().String()
 
 	models.AddUser(req.RoomID, thisUserId, req.Username)
 
-	users, _ := models.GetUsers(req.RoomID)
+	room, exists := models.GetRoom(req.RoomID)
+	if !exists {
+		http.Error(w, "Room not found", http.StatusNotFound)
+		return
+	}
 
 	err := services.BroadcastUserJoined(req.RoomID, map[string]interface{}{
 		"type": "user-joined",
@@ -56,6 +56,16 @@ func JoinRoom(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(JoinRoomResponse{
 		Valid: true,
-		Users: users,
+		Room: &models.Room{
+			ID:        room.ID,
+			Name:      room.Name,
+			CreatedAt: room.CreatedAt, 
+			//Intentionally Left Out the Room PIN
+			Users:     room.Users,
+		},
+		User: &models.User{
+			ID:       thisUserId,
+			Username: req.Username,
+		},
 	})
 }
