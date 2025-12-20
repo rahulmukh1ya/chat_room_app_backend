@@ -27,6 +27,11 @@ func main() {
 	router.HandleFunc("/send-message", handlers.SendMessage).Methods("POST", "OPTIONS")
 	router.HandleFunc("/join-room", handlers.JoinRoom).Methods("POST", "OPTIONS")
 	router.HandleFunc("/leave-room", handlers.LeaveRoom).Methods("POST", "OPTIONS")
+	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`{"status":"ok"}`))
+	}).Methods("GET", "OPTIONS")
 
 	log.Println("Server Starting on :8080")
 	log.Fatal(http.ListenAndServe(":8080", router))
